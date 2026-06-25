@@ -75,7 +75,7 @@ This should install linien-relock and all of its necessary dependencies inside y
 
 ### 3. Installing linien-relock on your Red Pitaya:
 
-First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://www.python.org/downloads/release/python-3127/) with installation instructions at the bottom of the page. Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
+First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard_advanced.html#os) with installation instructions found [here](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html). Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
 
 If the Red Pitaya has internet access: In your terminal running the virtual environment, run 
 ```bash
@@ -179,7 +179,7 @@ install_linien.bat
 
 ### 3. Installing linien-relock on your Red Pitaya:
 
-First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://www.python.org/downloads/release/python-3127/) with installation instructions at the bottom of the page. Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
+First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard_advanced.html#os) with installation instructions found [here](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html). Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
 
 If the Red Pitaya has internet access: In your terminal running the virtual environment, run 
 ```bash
@@ -211,6 +211,8 @@ Then SSH into the Red Pitaya:
 ```bash
 ssh root@rp-XXXXXX.local
 ```
+The Red Pitaya will prompt you for a password when you first try to SSH in. By default, this password is **root** according to the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/developerGuide/software/getting_started/ssh/ssh.html#ssh)
+
 Once inside the Red Pitaya, run the following commands to register your computer's RSA key
 ```bash
 mkdir -p ~/.ssh
