@@ -20,3 +20,5 @@ fpga_build
 .Xil
 .pytest_cache
 *.egg-info
+/Linien Relock OS.zip
+ 

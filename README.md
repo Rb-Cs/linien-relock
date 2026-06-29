@@ -13,7 +13,7 @@ Installation Instructions (Mac OS)
 ---------------
 ### 0. Giving yourself a workspace
 
-We want to keep track of where all of our files go, so first create a folder somewhere on your computer that you can access. Your Desktop is a good place. All of our other steps will be done inside this folder, so name it something descriptive "linien_folder". Next, open a Terminal and move to there using *cd*. You can check what directory you're in with the following command in your terminal:
+We want to keep track of where all of our files go, so first create a folder somewhere on your computer that you can access. Your Desktop is a good place. All of our other steps will be done inside this folder, so name it something descriptive like "linien_environment". Next, open a Terminal and move to there using *cd*. You can check what directory you're in with the following command in your terminal:
 ```bash
 pwd
 ```
@@ -61,12 +61,12 @@ Your output might contain multiple lines, but the first line should point to you
 
 Now you are (finally!) ready to install linien. First, download or clone this Github repo. There are many ways to do this, but the easiest is to navigate to the top of the page, click the green "<> Code" button, and download the zip file. 
 
-Whatever method you use, make sure linien-relock folder is inside your workspace folder. Inside the linien-relock folder, there is a file called *install_linien.sh*. Open this file in a text editor. The tenth line says
+Whatever method you use, make sure you unzip the "linien-relock" folder into your workspace folder. Inside the "linien-relock" folder, there is a file called *install_linien.sh*. Open this file in a text editor. The tenth line says
 ```bash
 VENV="/Users/jeffreyli/Desktop/Ni Lab/linienvenv"
 ```
 
-Modify this to the path for your virtual environment (DO NOT include "/bin/python") that you recorded in step 1 of the installation. With this complete, in your terminal navigate to the linien-relock folder and run the following command:
+Modify this to the path for your virtual environment (DO NOT include "/bin/python") that you recorded in step 1 of the installation. Make sure you are in the linien-relock folder in your terminal (with the linienvenv virtual environment) and run the following command:
 ```bash
 ./install_linien.sh
 ```
@@ -74,10 +74,19 @@ Modify this to the path for your virtual environment (DO NOT include "/bin/pytho
 This should install linien-relock and all of its necessary dependencies inside your venv
 
 ### 3. Installing linien-relock on your Red Pitaya:
+First, you will need to install the correct Red Pitaya OS onto the SD card. To simplify installation (and account for the fact that not all installs of linien-relock will have internet on the Red Pitaya), I have included a complete Red Pitaya OS with linien-relock already installed in this repo. 
 
-First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard_advanced.html#os) with installation instructions found [here](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html). Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
+To install the Red Pitaya OS with linien-relock already on it, unzip the "Linien Relock OS" folder and follow the instructions on the [SD card install page](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html#windows-gui), selecting the unzipped "Linien Relock OS" folder in the Flash from file options. This will take ~half an hour and cannot be interrupted.
 
-If the Red Pitaya has internet access: In your terminal running the virtual environment, run 
+After the OS has been written to the SD card, plug the SD card into the Red Pitaya and power it on. Make sure the Red Pitaya is connected via Ethernet either directly to your computer or to a LAN network that is shared with your computer (the LAN network does not need internet access). Take note of the Red Pitaya host name, which should be written on the ethernet port and take the form of something like "RP-XXXXXX.LOCAL/". This is the IP hostname of the device and is the primary way we will connect to the device. 
+
+In the terminal running the (linienvenv) virtual environment, type 
+```bash
+ping rp-XXXXXX.local
+```
+where you replace XXXXXX with the IP of your Red Pitaya. If you see lines appear that say something like "Reply from 192.168.x.xxx ..."  then your Red Pitaya is discoverable on your network.
+
+Next, in the same terminal running the virtual environment, run
 ```bash
 python
 ```
@@ -88,41 +97,17 @@ from linien.gui.app import run_application
 run_application()
 ```
 
-This will bring up the GUI. You can click the "New device" button and add your device's hostname in the instructed box. Once added, click on the hostname that corresponds to your Red Pitaya in the main window. This will automatically connect to the Red Pitaya and prompt you to install the server. Click "yes" and wait for the install to finish/the GUI to appear. Close the GUI. We now need to modify this install with our custom files for relock.
-
-Now, we need to establish secure communication between our computer and the Red Pitaya running linien. We do this by generating an SSH keypair
-
-Run the following command in any terminal window:
-```bash
-ssh-keygen -t rsa -b 4096
-```
-Press Enter when prompted to accept defaults. Then copy this ssh key onto the Red Pitaya with 
-```bash
-ssh-copy-id root@rp-XXXXXX.local
-```
-When prompted, enter "root" as the password for the Red Pitaya. You can then test password-less login with
-```bash
-ssh root@rp-XXXXXX.local
-```
-If this does not prompt you for a password, then you've successfully copied the SSH key. Exit the SSH window by running *exit* inside of it.
-
-You can now set up the script to copy the new server files over. Find the file in the linien-relock folder called *install_relock_server.sh* and locate line 16. It should say 
-```bash
-RP_IP="rp-XXXXXX.local"        # Red Pitaya IP address EDIT THIS
-```
-Modify this with your Red Pitaya host name. Then, in a terminal run the bash file with
-```bash
-./install_relock_server.sh
-```
+This may take a while to open the GUI the first time. When the GUI does open, click the button to connect a New Device. Name the device something descriptive and in the line that says "rp-xxxxxx.local" enter your Red Pitaya hostname. Then, use the main GUI window to connect to the Red Pitaya.
 
 This completes your installation of linien-relock on both your computer and the Red Pitaya
+
 
 Installation Instructions (Windows)
 ---------------
 
 ### 0. Giving yourself a workspace
 
-We want to keep track of where all of our files go, so first create a folder somewhere on your computer that you can access. Your Desktop is a good place. All of our other steps will be done inside this folder, so name it something descriptive "linien_folder". Next, open a Command Prompt and move to there using *cd*. You can check what directory you're in with the following command in your Command Prompt:
+We want to keep track of where all of our files go, so first create a folder somewhere on your computer that you can access. Your Documents folder is a good place. All of our other steps will be done inside this folder, so name it something descriptive like "linien_environment". Next, open a Command Prompt and move to there using *cd*. You can check what directory you're in with the following command in your Command Prompt (NOT POWERSHELL):
 ```bash
 cd
 ```
@@ -167,21 +152,31 @@ Your output might contain multiple lines, but the first line should point to you
 
 Now you are (finally!) ready to install linien. First, download or clone this Github repo. There are many ways to do this, but the easiest is to navigate to the top of the page, click the green "<> Code" button, and download the zip file. 
 
-Whatever method you use, make sure linien-relock folder is inside your workspace folder. Inside the linien-relock folder, there is a file called *install_linien.bat*. Open this file in a text editor. The ninth line says:
+Whatever method you use, make sure you unzip the "linien-relock" folder into your workspace folder. Inside the "linien-relock" folder, there is a file called *install_linien.bat*. Open this file in a text editor. The ninth line says:
 ```bash
 set VENV=C:\Users\jeffreyli\Desktop\Ni Lab\linienvenv
 ```
 
-Modify this to the path for your virtual environment that you recorded in step 1 of the installation (DO NOT include "/bin/python"). With this complete, in your terminal (with the virtual environment) run the following command:
+Modify this to the path for your virtual environment that you recorded in step 1 of the installation (DO NOT include "\Scripts\python.exe"). Make sure you are in the linien-relock folder in your terminal (with the linienvenv virtual environment) and run the following command:
 ```bash
 install_linien.bat
 ```
 
 ### 3. Installing linien-relock on your Red Pitaya:
 
-First, install the Red Pitaya OS 1.04-28 found on the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard_advanced.html#os) with installation instructions found [here](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html). Note down the host name of the Red Pitaya. It should be something of the form "RP-XXXXXX.LOCAL/" written on the board above the ethernet port. Afterwards, you should connect the Red Pitaya via ethernet to a router that has internet access. There are ways to set up linien on the Red Pitaya without internet, but they're much more painful.
+First, you will need to install the correct Red Pitaya OS onto the SD card. To simplify installation (and account for the fact that not all installs of linien-relock will have internet on the Red Pitaya), I have included a complete Red Pitaya OS with linien-relock already installed in this repo. 
 
-If the Red Pitaya has internet access: In your terminal running the virtual environment, run 
+To install the Red Pitaya OS with linien-relock already on it, unzip the "Linien Relock OS" folder and follow the instructions on the [SD card install page](https://redpitaya.readthedocs.io/en/latest/quickStart/SDcard/SDcard.html#windows-gui), selecting the unzipped "Linien Relock OS" folder in the Flash from file options. This will take ~half an hour and cannot be interrupted.
+
+After the OS has been written to the SD card, plug the SD card into the Red Pitaya and power it on. Make sure the Red Pitaya is connected via Ethernet either directly to your computer or to a LAN network that is shared with your computer (the LAN network does not need internet access). Take note of the Red Pitaya host name, which should be written on the ethernet port and take the form of something like "RP-XXXXXX.LOCAL/". This is the IP hostname of the device and is the primary way we will connect to the device. 
+
+In the terminal running the (linienvenv) virtual environment, type 
+```bash
+ping rp-XXXXXX.local
+```
+where you replace XXXXXX with the IP of your Red Pitaya. If you see lines appear that say something like "Reply from 192.168.x.xxx ..."  then your Red Pitaya is discoverable on your network.
+
+Next, in the same terminal running the virtual environment, run
 ```bash
 python
 ```
@@ -192,43 +187,7 @@ from linien.gui.app import run_application
 run_application()
 ```
 
-This will bring up the GUI. You can click the "New device" button and add your device's hostname in the instructed box. Once added, click on the hostname that corresponds to your Red Pitaya in the main window. This will automatically connect to the Red Pitaya and prompt you to install the server. Click "yes" and wait for the install to finish/the GUI to appear. Close the GUI. We now need to modify this install with our custom files for relock.
-
-Now, we need to establish secure communication between our computer and the Red Pitaya running linien. We do this by generating an SSH keypair. Run the following command in a Command Prompt:
-```bash
-ssh-keygen
-```
-Hit Enter when prompted for inputs. This will generate two files. Take note of the one with extension "id_rsa.pub"
-```makefile
-C:\Users\<you>\.ssh\id_rsa
-C:\Users\<you>\.ssh\id_rsa.pub
-```
-Copy the RSA public key from your computer to the Red Pitaya using the command (replacing <you> with the correct path)
-```bash
-scp C:\Users\<you>\.ssh\id_rsa.pub root@<RP_IP>:/root/authorized_keys_tmp
-```
-Then SSH into the Red Pitaya:
-```bash
-ssh root@rp-XXXXXX.local
-```
-The Red Pitaya will prompt you for a password when you first try to SSH in. By default, this password is **root** according to the [Red Pitaya website](https://redpitaya.readthedocs.io/en/latest/developerGuide/software/getting_started/ssh/ssh.html#ssh)
-
-Once inside the Red Pitaya, run the following commands to register your computer's RSA key
-```bash
-mkdir -p ~/.ssh
-cat authorized_keys_tmp >> ~/.ssh/authorized_keys
-rm authorized_keys_tmp
-chmod 600 ~/.ssh/authorized_keys
-```
-You can exit the Red Pitaya (run *exit* in the ssh window). You can now set up the script to copy the new server files over. Find the file in the linien-relock folder called *install_relock_server.bat* and locate line 12. It should say 
-```bash
-set RP_IP=rp-XXXXXX.local 
-```
-
-Modify this with your Red Pitaya host name. Then, in your Command Prompt run the install file by calling
-```bash
-install_relock_server.bat
-```
+This may take a while to open the GUI the first time. When the GUI does open, click the button to connect a New Device. Name the device something descriptive and in the line that says "rp-xxxxxx.local" enter your Red Pitaya hostname. Then, use the main GUI window to connect to the Red Pitaya.
 
 This completes your installation of linien-relock on both your computer and the Red Pitaya
 
