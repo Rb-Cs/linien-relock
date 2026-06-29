@@ -118,10 +118,10 @@ Because the original linien v0.3.2 package depends on several packages that have
 
 Before creating the venv, check if you have Python 3.12 installed. Linien will not run on newer version of Python. Open a command window and type
 ```bash
-python3.12 --version
+py -0p
 ```
 
-If this does not return something like "Python 3.12.x", you will need to install Python 3.12. You can do this by visiting the [official Python website](https://www.python.org/downloads/release/python-3127/) and downloading the installer that's relevant for your operating system. It doesn't matter which version of Python 3.12 you install, so just install any stable release like the one in the link. Because we are on Windows, you can just scroll to the bottom of the page and click the yellow button that says "Download Python install manager" and follow the instructions there.
+If this does not return a line that starts with "-V:3.12", you will need to install Python 3.12. You can do this by visiting the [official Python website](https://www.python.org/downloads/release/python-3127/) and downloading the installer that's relevant for your operating system. It doesn't matter which version of Python 3.12 you install, so just install any stable release like the one in the link. Because we are on Windows, you can just scroll to the bottom of the page and click the yellow button that says "Download Python install manager" and follow the instructions there.
 
 After this, in the same Command Prompt window as earlier, run:
 ```bash
