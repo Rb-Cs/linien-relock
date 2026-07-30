@@ -247,6 +247,26 @@ screen -r
 
 Any problems with server-side code will be reflected in error messages in this screen. You can exit this screen by using *Ctrl + A + D*. 
 
+If you make changes to the client side code, it is recommended that you directly edit the unzipped linien-relock folder. In this case, to activate your changes you can activate your venv and just run on Windows:
+```bash
+install_linien.bat
+```
+or on Mac:
+```bash
+./install_linien.sh
+```
+This will install all client/gui changes.
+
+If you make any changes to the server code, the process is different because you need to write the changes onto the Red Pitaya. First, edit the code in the unzipped linien-relock folder. Then, open the appropriate bash file for your operating system: "install_relock_server.bat" for Windows and "install_relock_server.sh" for Mac. Modify the line that asks for the Red Pitaya IP. Then run the file in your terminal. On Windows:
+```bash
+install_relock_server.bat
+```
+or on Mac:
+```bash
+./install_relock_server.sh
+```
+You will be prompted for the Red Pitaya's password. The password is "root". The Red Pitaya will reboot and then you should see your server-side changes register the next time you open linien.
+
 
 Uninstalling
 ---------------

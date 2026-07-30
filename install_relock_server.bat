@@ -9,7 +9,7 @@ echo.
 :: ------------------------------
 :: CONFIGURATION (EDIT THIS)
 :: ------------------------------
-set RP_IP=rp-XXXXXX.local 
+set RP_IP=rp-XXXXXX.local
 :: ------------------------------
 
 set LOCAL_DIR=.\linien\server
@@ -25,21 +25,10 @@ echo Local directory: %LOCAL_DIR%
 echo Remote directory: %RP_TARGET_DIR%
 echo.
 
-:: 2. Test passwordless SSH connection
-echo Testing SSH connectivity to Red Pitaya (%RP_IP%)...
-ssh -o BatchMode=yes root@%RP_IP% "echo test" >nul 2>&1
-
-if %errorlevel% neq 0 (
-    echo ERROR: Cannot connect via SSH without password.
-    echo You must install your SSH public key on the Red Pitaya.
-    exit /b 1
-)
-
-echo SSH connection OK.
-echo.
-
-:: 3. Copy modified files
+:: 2. Copy modified files. No SSH key required - you'll be prompted
+::    for the root password.
 echo Copying modified linien_server files to Red Pitaya...
+echo You may be asked for the Red Pitaya root password.
 scp -r "%LOCAL_DIR%\*" root@%RP_IP%:%RP_TARGET_DIR%/
 
 if %errorlevel% neq 0 (
@@ -50,8 +39,9 @@ if %errorlevel% neq 0 (
 echo Files copied successfully.
 echo.
 
-:: 4. Reboot the Red Pitaya
+:: 3. Reboot the Red Pitaya
 echo Rebooting Red Pitaya...
+echo You may be asked for the root password again.
 ssh root@%RP_IP% "reboot"
 
 if %errorlevel% neq 0 (

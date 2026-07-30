@@ -16,7 +16,7 @@ echo ""
 RP_IP="rp-XXXXXX.local"        # Red Pitaya IP address EDIT THIS
 ### ------------------------------
 
-LOCAL_DIR="./linien/server"    # Local modified server directory 
+LOCAL_DIR="./linien/server"    # Local modified server directory
 RP_TARGET_DIR="/usr/local/lib/python3.5/dist-packages/linien/server"   # Remote install path
 
 # 1. Verify that the local folder exists
@@ -29,32 +29,29 @@ echo "Local directory: $LOCAL_DIR"
 echo "Remote directory: $RP_TARGET_DIR"
 echo ""
 
-# 2. Test SSH connection (passwordless)
-echo "Testing SSH connectivity to Red Pitaya ($RP_IP)..."
+# 2. Open one authenticated SSH connection and reuse it for both the copy
+#    and the reboot, so you're only prompted for a password once, even
+#    though no SSH key is set up on the Red Pitaya.
+CONTROL_SOCKET="/tmp/linien_deploy_%h_%p_%r"
+SSH_OPTS=(-o ControlMaster=auto -o ControlPath="$CONTROL_SOCKET" -o ControlPersist=60)
 
-if ssh -o BatchMode=yes root@"$RP_IP" "echo test" >/dev/null 2>&1 ; then
-    echo "SSH connection OK (passwordless)"
-else
-    echo "ERROR: Cannot connect via SSH without password."
-    echo "You must set up SSH keys first:"
-    echo ""
-    echo "   ssh-copy-id root@$RP_IP"
-    echo ""
+echo "Connecting to Red Pitaya ($RP_IP)... you may be asked for the root password."
+ssh "${SSH_OPTS[@]}" root@"$RP_IP" "echo Connected." || {
+    echo "ERROR: Could not connect to $RP_IP."
     exit 1
-fi
-
+}
 echo ""
 
 # 3. Copy modified files to the Red Pitaya
 echo "Copying modified linien_server files to Red Pitaya..."
-scp -r "$LOCAL_DIR"/* root@"$RP_IP":"$RP_TARGET_DIR"/
-
+scp -o ControlPath="$CONTROL_SOCKET" -r "$LOCAL_DIR"/* root@"$RP_IP":"$RP_TARGET_DIR"/
 echo "Files copied successfully."
 echo ""
 
-# 4. Reboot Red Pitaya
+# 4. Reboot Red Pitaya (reuses the same authenticated connection, no
+#    second password prompt)
 echo "Rebooting Red Pitaya..."
-ssh root@"$RP_IP" "reboot"
+ssh -o ControlPath="$CONTROL_SOCKET" root@"$RP_IP" "reboot"
 
 echo "Reboot command sent. SSH session will disconnect."
 echo ""

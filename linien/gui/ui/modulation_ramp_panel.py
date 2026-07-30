@@ -11,15 +11,30 @@ class ModulationAndRampPanel(QtWidgets.QWidget, CustomWidget):
         self.load_ui('modulation_ramp_panel.ui')
 
     def ready(self):
+        print("")
+        print("ready")
+        print("ramp_amplitude_spinbox:", self.ids.ramp_amplitude_spinbox)
+        print("ramp_center:", self.ids.ramp_center)
+        print("")
         self.ids.modulation_frequency.setKeyboardTracking(False)
         self.ids.modulation_frequency.valueChanged.connect(self.change_modulation_frequency)
         self.ids.modulation_amplitude.setKeyboardTracking(False)
         self.ids.modulation_amplitude.valueChanged.connect(self.change_modulation_amplitude)
         self.ids.ramp_speed.currentIndexChanged.connect(self.change_ramp_speed)
+        ## New ramp amplitude/ramp center controls
+        self.ids.ramp_center.setKeyboardTracking(False)
+        self.ids.ramp_center.valueChanged.connect(self.change_ramp_center)
+        self.ids.ramp_amplitude_spinbox.setKeyboardTracking(False)
+        self.ids.ramp_amplitude_spinbox.valueChanged.connect(self.change_ramp_amplitude_spinbox)
 
         self.ids.spectroscopyTabs.setCurrentIndex(0)
 
     def connection_established(self):
+        print("")
+        print("connection established")
+        print("ramp_amplitude_spinbox:", self.ids.ramp_amplitude_spinbox)
+        print("ramp_center:", self.ids.ramp_center)
+        print("")
         params = self.app().parameters
         self.control = self.app().control
         self.parameters = params
@@ -39,6 +54,10 @@ class ModulationAndRampPanel(QtWidgets.QWidget, CustomWidget):
             self.ids.ramp_speed
         )
 
+        # New ramp parameters
+        param2ui(params.center, self.ids.ramp_center)
+        param2ui(params.ramp_amplitude, self.ids.ramp_amplitude_spinbox)
+
         params.dual_channel.on_change(self.dual_channel_changed)
 
     def change_modulation_frequency(self):
@@ -51,6 +70,14 @@ class ModulationAndRampPanel(QtWidgets.QWidget, CustomWidget):
 
     def change_ramp_speed(self, decimation):
         self.parameters.ramp_speed.value = decimation
+        self.control.write_data()
+
+    def change_ramp_center(self):
+        self.parameters.center.value = self.ids.ramp_center.value()
+        self.control.write_data()
+
+    def change_ramp_amplitude_spinbox(self):
+        self.parameters.ramp_amplitude.value = self.ids.ramp_amplitude_spinbox.value()
         self.control.write_data()
 
     def dual_channel_changed(self, value):
